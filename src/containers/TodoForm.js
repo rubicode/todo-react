@@ -1,45 +1,31 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux';
+import React, { useState } from 'react'
+import { useDispatch } from 'react-redux';
 import { addTodo } from '../actions'
 
-class TodoForm extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { title: '' };
+export default function TodoForm(props) {
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+  const [title, setTitle] = useState('')
+
+  const dispatch = useDispatch()
+
+  const handleChange = (event) => {
+    setTitle(event.target.value);
   }
 
-  handleChange(event) {
-    this.setState({ title: event.target.value });
-  }
-
-  handleSubmit(event) {
-    this.props.add(this.state.title);
-    this.setState({ title: '' })
+  const handleSubmit = (event) => {
+    dispatch(addTodo(title))
+    setTitle('')
     event.preventDefault();
   }
 
-  render() {
-    return (
-      <form onSubmit={this.handleSubmit}>
-        <label>
-          Name:
-          <input className="form-control" type="text" value={this.state.title} onChange={this.handleChange} />
-        </label>
-        <button className="btn btn-success" type="submit">simpan</button>
-      </form>
-    );
-  }
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input className="form-control" type="text" value={title} onChange={handleChange} />
+      </label>
+      <button className="btn btn-success" type="submit">simpan</button>
+    </form>
+  );
+
 }
-
-
-const mapDispatchToProps = (dispatch) => ({
-  add: (title) => dispatch(addTodo(title))
-})
-
-export default connect(
-  null,
-  mapDispatchToProps
-)(TodoForm)

@@ -1,39 +1,46 @@
-import React, { Component } from 'react'
-import TodoItem from './Item'
-import { connect } from 'react-redux';
-import { loadTodo } from '../actions'
+import React, { useEffect, useCallback } from 'react'
+import TodoItem from '../components/TodoItem'
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { loadTodo, resendTodo, removeTodo } from '../actions'
 
-class TodoList extends Component {
+export default function TodoList(props) {
 
-    componentDidMount() {
-        this.props.load()
-    }
+    const { todos } = useSelector(state => ({
+        todos: state.todos,
+    }), shallowEqual);
 
-    render() {
-        const nodeList = this.props.data.map(item => (
-            <TodoItem
-                key={item._id}
-                id={item._id}
-                title={item.title}
-                sent={item.sent} />))
+    const dispatch = useDispatch()
 
-        return (
-            <ol>
-                {nodeList}
-            </ol>
-        )
-    }
+    useEffect(() => {
+        dispatch(loadTodo())
+    }, [dispatch])
+
+    const resend = useCallback(
+        (id, title) => {
+            dispatch(resendTodo(id, title));
+        },
+        [dispatch],
+    );
+
+    const remove = useCallback(
+        (id) => {
+            dispatch(removeTodo(id));
+        },
+        [dispatch],
+    );
+
+    const nodeList = todos.map(item => (
+        <TodoItem
+            key={item._id}
+            id={item._id}
+            title={item.title}
+            sent={item.sent}
+            resend={() => resend(item._id, item.title)}
+            remove={() => remove(item._id)} />))
+
+    return (
+        <ol>
+            {nodeList}
+        </ol>
+    )
 }
-
-const mapStateToProps = (state) => ({
-    data: state.todos
-})
-
-const mapDispatchToProps = (dispatch) => ({
-    load: () => dispatch(loadTodo())
-})
-
-export default connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(TodoList)
