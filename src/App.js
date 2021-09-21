@@ -1,43 +1,22 @@
-import { Container } from 'flux/utils'
-import TodoBox from './components/TodoBox'
-import TodoStore from './flux/TodoStore'
-import TodoActions from './flux/TodoActions'
 import { Component } from 'react';
+import TodoBox from './components/TodoBox'
+import rootReducer from './reducers';
+import { createStore, applyMiddleware } from 'redux';
+import { Provider } from 'react-redux';
+import thunk from 'redux-thunk';
 
-const convert = function (containerClass) {
-  const tmp = containerClass;
-  containerClass = function (...args) {
-    return new tmp(...args);
-  };
-  containerClass.prototype = tmp.prototype;
-  containerClass.getStores = tmp.getStores;
-  containerClass.calculateState = tmp.calculateState;
-  return containerClass;
-}
+const store = createStore(rootReducer, applyMiddleware(thunk))
+
 
 class App extends Component {
 
-  static getStores() {
-    return [
-      TodoStore
-    ];
-  }
-
-  static calculateState(prevState) {
-    return {
-      todos: TodoStore.getState(),
-
-      onLoad: TodoActions.loadTodo,
-      onAdd: TodoActions.addTodo,
-      onDelete: TodoActions.deleteTodo,
-      onResend: TodoActions.resendTodo
-
-    };
-  }
-
   render() {
-    return <TodoBox {...this.state} />;
+    return (
+      <Provider store={store}>
+        <TodoBox />
+      </Provider>
+    )
   }
 }
 
-export default Container.create(convert(App));
+export default App;
