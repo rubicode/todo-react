@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import { Container } from 'flux/utils'
+import TodoBox from './components/TodoBox'
+import TodoStore from './flux/TodoStore'
+import TodoActions from './flux/TodoActions'
+import { Component } from 'react';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const convert = function (containerClass) {
+  const tmp = containerClass;
+  containerClass = function (...args) {
+    return new tmp(...args);
+  };
+  containerClass.prototype = tmp.prototype;
+  containerClass.getStores = tmp.getStores;
+  containerClass.calculateState = tmp.calculateState;
+  return containerClass;
 }
 
-export default App;
+class App extends Component {
+
+  static getStores() {
+    return [
+      TodoStore
+    ];
+  }
+
+  static calculateState(prevState) {
+    return {
+      todos: TodoStore.getState(),
+
+      onLoad: TodoActions.loadTodo,
+      onAdd: TodoActions.addTodo,
+      onDelete: TodoActions.deleteTodo,
+      onResend: TodoActions.resendTodo
+
+    };
+  }
+
+  render() {
+    return <TodoBox {...this.state} />;
+  }
+}
+
+export default Container.create(convert(App));

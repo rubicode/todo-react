@@ -1,4 +1,5 @@
 export default function TodoItem(props) {
+    console.log(props)
     return (
         <li>
             {props.title}
