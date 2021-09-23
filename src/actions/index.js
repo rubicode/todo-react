@@ -1,5 +1,3 @@
-import axios from 'axios'
-import { v4 as uuidv4 } from 'uuid'
 import {
   LOAD_TODO_SUCCESS,
   LOAD_TODO_FAILURE,
@@ -9,107 +7,75 @@ import {
   RESEND_TODO_SUCCESS,
   RESEND_TODO_FAILURE,
   REMOVE_TODO_SUCCESS,
-  REMOVE_TODO_FAILURE
+  REMOVE_TODO_FAILURE,
+  LOAD_TODO,
+  ADD_TODO_DRAWING,
+  RESEND_TODO,
+  REMOVE_TODO
 } from '../constant'
 
-const request = axios.create({
-  baseURL: 'http://localhost:3001/',
-  timeout: 1000,
-  headers: { 'X-Custom-Header': 'foobar' }
-});
-
-const loadTodoSuccess = (todos) => ({
+export const loadTodoSuccess = (todos) => ({
   type: LOAD_TODO_SUCCESS,
   todos
 })
 
-const loadTodoFailure = () => ({
+export const loadTodoFailure = () => ({
   type: LOAD_TODO_FAILURE
 })
 
-export const loadTodo = () => {
-  return dispatch => {
-    return request.get('todos')
-      .then(function (response) {
-        dispatch(loadTodoSuccess(response.data.todos))
-      })
-      .catch(function (error) {
-        console.error(error);
-        dispatch(loadTodoFailure())
-      });
-  }
-}
+export const loadTodo = () => ({
+  type: LOAD_TODO
+})
 
-const drawAddTodo = (id, title) => ({
-  type: ADD_TODO,
+export const drawAddTodo = (id, title) => ({
+  type: ADD_TODO_DRAWING,
   id, title
 })
 
-const addTodoSuccess = (oldId, todo) => ({
+export const addTodoSuccess = (oldId, todo) => ({
   type: ADD_TODO_SUCCESS,
   oldId,
   todo
 })
 
-const addTodoFailure = (id) => ({
+export const addTodoFailure = (id) => ({
   type: ADD_TODO_FAILURE,
   id
 })
 
-export const addTodo = (title) => {
-  const id = uuidv4()
-  return dispatch => {
-    dispatch(drawAddTodo(id, title))
-    return request.post('todos', { title })
-      .then(function (response) {
-        dispatch(addTodoSuccess(id, response.data.todo))
-      })
-      .catch(function (error) {
-        console.error(error);
-        dispatch(addTodoFailure(id))
-      });
-  }
-}
+export const addTodo = (title) => ({
+  type: ADD_TODO,
+  title
+})
 
-const resendTodoSuccess = (oldId, todo) => ({
+export const resendTodoSuccess = (oldId, todo) => ({
   type: RESEND_TODO_SUCCESS,
   oldId,
   todo
 })
 
-const resendTodoFailure = () => ({
+export const resendTodoFailure = () => ({
   type: RESEND_TODO_FAILURE
 })
 
-export const resendTodo = (oldId, title) => {
-  return dispatch => {
-    return request.post('todos', { title })
-      .then(response => {
-        dispatch(resendTodoSuccess(oldId, response.data.todo))
-      }).catch(err => {
-        dispatch(resendTodoFailure())
-      })
-  }
-}
+export const resendTodo = (oldId, title) => ({
+  type: RESEND_TODO,
+  oldId,
+  title
+})
 
-const removeTodoSuccess = (id) => ({
+export const removeTodoSuccess = (id) => ({
   type: REMOVE_TODO_SUCCESS,
   id
 })
 
-const removeTodoFailure = () => ({
+export const removeTodoFailure = () => ({
   type: REMOVE_TODO_FAILURE
 })
 
-export const removeTodo = (id) => {
-  return dispatch => {
-    return request.delete(`todos/${id}`)
-      .then(response => {
-        dispatch(removeTodoSuccess(id))
-      }).catch(err => {
-        dispatch(removeTodoFailure())
-      })
-  }
-}
+export const removeTodo = (id) => ({
+  type: REMOVE_TODO,
+  id
+})
 
 

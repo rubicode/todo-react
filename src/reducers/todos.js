@@ -1,13 +1,13 @@
 import {
     LOAD_TODO_SUCCESS,
     LOAD_TODO_FAILURE,
-    ADD_TODO,
     ADD_TODO_SUCCESS,
     ADD_TODO_FAILURE,
     RESEND_TODO_FAILURE,
     RESEND_TODO_SUCCESS,
     REMOVE_TODO_SUCCESS,
-    REMOVE_TODO_FAILURE
+    REMOVE_TODO_FAILURE,
+    ADD_TODO_DRAWING
 } from '../constant'
 
 const todos = (state = [], action) => {
@@ -18,7 +18,7 @@ const todos = (state = [], action) => {
                 return item
             })
 
-        case ADD_TODO:
+        case ADD_TODO_DRAWING:
             return [
                 ...state,
                 {

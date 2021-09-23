@@ -3,9 +3,12 @@ import TodoBox from './components/TodoBox'
 import rootReducer from './reducers';
 import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
-import thunk from 'redux-thunk';
+import createSagaMiddleware from 'redux-saga';
+import rootSaga from './sagas/todos'
 
-const store = createStore(rootReducer, applyMiddleware(thunk))
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
+sagaMiddleware.run(rootSaga)
 
 
 class App extends Component {
