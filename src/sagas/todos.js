@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from 'uuid'
 import * as actions from '../actions'
 import { ADD_TODO, LOAD_TODO, REMOVE_TODO, RESEND_TODO } from '../constant'
 import * as API from '../services/todos'
+import * as GraphQL from '../services/graphql'
 
 /*
 return dispatch => {
@@ -19,8 +20,8 @@ return dispatch => {
 
 function* loadTodo() {
     try {
-        const data = yield call(API.getTodos);
-        yield put(actions.loadTodoSuccess(data.todos));
+        const todos = yield call(GraphQL.loadTodos);
+        yield put(actions.loadTodoSuccess(todos));
     } catch (error) {
         console.log(error);
         yield put(actions.loadTodoFailure());
@@ -47,8 +48,8 @@ function* addTodo(payload) {
     const id = uuidv4()
     try {
         yield put(actions.drawAddTodo(id, title))
-        const data = yield call(API.createTodo, title);
-        yield put(actions.addTodoSuccess(id, data.todo));
+        const todo = yield call(API.createTodo, title);
+        yield put(actions.addTodoSuccess(id, todo));
     } catch (error) {
         console.log(error);
         yield put(actions.addTodoFailure(id));
@@ -69,8 +70,8 @@ return dispatch => {
 function* resendTodo(payload) {
     const { oldId, title } = payload;
     try {
-        const data = yield call(API.createTodo, title);
-        yield put(actions.resendTodoSuccess(oldId, data.todo));
+        const todo = yield call(API.createTodo, title);
+        yield put(actions.resendTodoSuccess(oldId, todo));
     } catch (error) {
         console.log(error);
         yield put(actions.resendTodoFailure());
@@ -93,8 +94,8 @@ return dispatch => {
 function* removeTodo(payload) {
     const { id } = payload;
     try {
-        const data = yield call(API.removeTodo, id);
-        yield put(actions.removeTodoSuccess(data.todo._id));
+        const todo = yield call(API.removeTodo, id);
+        yield put(actions.removeTodoSuccess(todo._id));
     } catch (error) {
         console.log(error);
         yield put(actions.removeTodoFailure());
