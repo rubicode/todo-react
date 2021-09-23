@@ -19,13 +19,13 @@ return dispatch => {
 */
 
 function* loadTodo() {
-    try {
-        const todos = yield call(GraphQL.loadTodos);
-        yield put(actions.loadTodoSuccess(todos));
-    } catch (error) {
-        console.log(error);
-        yield put(actions.loadTodoFailure());
-    }
+  try {
+    const todos = yield call(GraphQL.loadTodos);
+    yield put(actions.loadTodoSuccess(todos));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.loadTodoFailure());
+  }
 }
 
 /*
@@ -44,16 +44,16 @@ const id = uuidv4()
 */
 
 function* addTodo(payload) {
-    const { title } = payload;
-    const id = uuidv4()
-    try {
-        yield put(actions.drawAddTodo(id, title))
-        const todo = yield call(API.createTodo, title);
-        yield put(actions.addTodoSuccess(id, todo));
-    } catch (error) {
-        console.log(error);
-        yield put(actions.addTodoFailure(id));
-    }
+  const { title } = payload;
+  const id = uuidv4()
+  try {
+    yield put(actions.drawAddTodo(id, title))
+    const todo = yield call(API.createTodo, title);
+    yield put(actions.addTodoSuccess(id, todo));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.addTodoFailure(id));
+  }
 }
 
 /*
@@ -68,14 +68,14 @@ return dispatch => {
 */
 
 function* resendTodo(payload) {
-    const { oldId, title } = payload;
-    try {
-        const todo = yield call(API.createTodo, title);
-        yield put(actions.resendTodoSuccess(oldId, todo));
-    } catch (error) {
-        console.log(error);
-        yield put(actions.resendTodoFailure());
-    }
+  const { oldId, title } = payload;
+  try {
+    const todo = yield call(API.createTodo, title);
+    yield put(actions.resendTodoSuccess(oldId, todo));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.resendTodoFailure());
+  }
 }
 
 
@@ -92,21 +92,21 @@ return dispatch => {
 */
 
 function* removeTodo(payload) {
-    const { id } = payload;
-    try {
-        const todo = yield call(API.removeTodo, id);
-        yield put(actions.removeTodoSuccess(todo._id));
-    } catch (error) {
-        console.log(error);
-        yield put(actions.removeTodoFailure());
-    }
+  const { id } = payload;
+  try {
+    const todo = yield call(API.removeTodo, id);
+    yield put(actions.removeTodoSuccess(todo._id));
+  } catch (error) {
+    console.log(error);
+    yield put(actions.removeTodoFailure());
+  }
 }
 
 export default function* rootSaga() {
-    yield all([
-        takeEvery(LOAD_TODO, loadTodo),
-        takeEvery(ADD_TODO, addTodo),
-        takeEvery(RESEND_TODO, resendTodo),
-        takeEvery(REMOVE_TODO, removeTodo)
-    ]);
+  yield all([
+    takeEvery(LOAD_TODO, loadTodo),
+    takeEvery(ADD_TODO, addTodo),
+    takeEvery(RESEND_TODO, resendTodo),
+    takeEvery(REMOVE_TODO, removeTodo)
+  ]);
 }

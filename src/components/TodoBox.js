@@ -1,5 +1,5 @@
-import TodoForm from '../containers/TodoForm'
 import TodoList from '../containers/TodoList'
+import { Link } from 'react-router-dom'
 
 export default function TodoBox() {
     return (
@@ -7,7 +7,7 @@ export default function TodoBox() {
             <h1>TODO</h1>
             <h2>Daftar Kerjaan :</h2>
             <TodoList />
-            <TodoForm />
+            <Link className="btn btn-success" to="/add">Tambah</Link>
         </div>
     )
 }

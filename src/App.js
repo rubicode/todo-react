@@ -5,6 +5,12 @@ import { createStore, applyMiddleware } from 'redux';
 import { Provider } from 'react-redux';
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas/todos'
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import TodoForm from './containers/TodoForm';
 
 const sagaMiddleware = createSagaMiddleware()
 const store = createStore(rootReducer, applyMiddleware(sagaMiddleware))
@@ -16,7 +22,12 @@ class App extends Component {
   render() {
     return (
       <Provider store={store}>
-        <TodoBox />
+        <Router forceRefresh={true}>
+          <Switch>
+            <Route exact path="/" component={TodoBox} />
+            <Route path="/add" component={TodoForm} />
+          </Switch>
+        </Router>
       </Provider>
     )
   }

@@ -1,8 +1,11 @@
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux';
 import { addTodo } from '../actions'
+import { useHistory } from 'react-router-dom';
+
 
 export default function TodoForm(props) {
+  let history = useHistory()
 
   const [title, setTitle] = useState('')
 
@@ -13,9 +16,10 @@ export default function TodoForm(props) {
   }
 
   const handleSubmit = (event) => {
+    event.preventDefault();
     dispatch(addTodo(title))
     setTitle('')
-    event.preventDefault();
+    history.push('/')
   }
 
   return (
